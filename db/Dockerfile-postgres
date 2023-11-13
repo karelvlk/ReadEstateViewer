@@ -1,0 +1,5 @@
+FROM postgres:latest
+ENV POSTGRES_USER=user1
+ENV POSTGRES_PASSWORD=password1
+ENV POSTGRES_DB=sreality_db
+EXPOSE 5432

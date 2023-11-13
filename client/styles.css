@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#header {
+    width: calc(100vw - 6em);
+    height: 80px;
+    background-color: lightgray;
+    display: flex;
+    align-items: center;
+    padding: 0em 2em;
+    margin: 1em;
+    border-radius: 16px;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+}
+
+#content {
+    width: 100%;
+    height: calc(100vh - 160px - 4em);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 1em;
+    padding: 1em 2em; 
+    box-sizing: border-box; 
+}
+
+#footer {
+    width: calc(100vw - 6em);
+    height: 80px;
+    display: flex;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+    padding: 0em 2em;
+    margin: 1em;
+    border-radius: 16px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.real-estate-item {
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: left;
+    align-items: center; 
+    overflow: hidden; 
+    background-color: lightgray;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+}
+
+.real-estate-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; 
+    position: relative; 
+    height: 100%;
+    background-color: lightgray;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+}
+
+.real-estate-item img {
+    width: 100%; 
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+}
+
+.img-label {
+    position: absolute;
+    bottom: 10px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px 10px;
+    text-align: center;
+    width: 90%;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 12px;
+}
+
+ul.pagination {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+ul.pagination li {
+    margin: 0 5px;
+    border-radius: 50%;
+    min-width: 40px;
+    text-align: center;
+}
+
+ul.pagination li a {
+    text-decoration: none;
+    padding: 5px 10px;
+    display: block;
+    border: 2px solid #ddd;
+    color: #333; 
+    border-radius: 100%;
+}
+
+ul.pagination li a:hover {
+    background-color: #eee;
+}
+
+ul.pagination li.active a {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
