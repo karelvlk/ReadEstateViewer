@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import pool
 
+
 class PostgresClient:
     def __init__(self, db_config):
         self.pool = psycopg2.pool.SimpleConnectionPool(1, 10, **db_config)
@@ -34,4 +35,3 @@ class PostgresClient:
 
     def close_pool(self):
         self.pool.closeall()
-

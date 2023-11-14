@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+LOG_LEVEL = "WARN"
 
 # Scrapy settings for quotesbot project
 #

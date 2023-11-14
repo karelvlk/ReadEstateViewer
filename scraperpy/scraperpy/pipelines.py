@@ -13,7 +13,6 @@ class PostgresPipeline:
 
     def open_spider(self, spider):
         self.client = PostgresClient(self.db_config)
-        self.client.create_table()
 
     def close_spider(self, spider):
         self.client.close_pool()

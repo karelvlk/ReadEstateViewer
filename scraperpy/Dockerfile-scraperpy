@@ -6,4 +6,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN playwright install
 RUN playwright install-deps
 COPY . . 
-CMD ["scrapy", "crawl", "scraperpy-css"]
+# Add a shell script to run init-db.py first, then start the spider
+COPY ./docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]

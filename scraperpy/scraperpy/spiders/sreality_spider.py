@@ -5,10 +5,14 @@ from scrapy.exceptions import CloseSpider
 DESIRED_SCRAPED_COUNT = 500
 PLAYWRIGHT_TIMEOUT = 60000  # 1 min
 
+logging.basicConfig(
+    level=logging.INFO,
+)
+
 
 class ScraperpySpider(scrapy.Spider):
     name = "scraperpy-css"
-    scraped_count = 1
+    scraped_count = 0
     custom_settings = {
         "DOWNLOAD_DELAY": 1,
         "CONCURRENT_REQUESTS": 1,

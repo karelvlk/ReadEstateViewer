@@ -9,14 +9,6 @@ services:
   #   depends_on:
   #     - db
 
-  scraperpy:
-    build:
-      context: ./scraperpy
-      dockerfile: Dockerfile-scraperpy
-    container_name: scraperpy
-    depends_on:
-      - db
-
   db:
     build:
       context: ./db
@@ -24,6 +16,20 @@ services:
     container_name: db
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  scraperpy:
+    build:
+      context: ./scraperpy
+      dockerfile: Dockerfile-scraperpy
+    container_name: scraperpy
+    depends_on:
+      db:
+        condition: service_healthy
 
   server:
     build:
@@ -33,7 +39,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   client:
     build:
