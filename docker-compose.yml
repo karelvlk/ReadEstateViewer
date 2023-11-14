@@ -1,11 +1,19 @@
 version: "3.8"
 
 services:
-  scraper:
+  # scraper:
+  #   build:
+  #     context: ./scraper
+  #     dockerfile: Dockerfile-scraper
+  #   container_name: scraper
+  #   depends_on:
+  #     - db
+
+  scraperpy:
     build:
-      context: ./scraper
-      dockerfile: Dockerfile-scraper
-    container_name: scraper
+      context: ./scraperpy
+      dockerfile: Dockerfile-scraperpy
+    container_name: scraperpy
     depends_on:
       - db
 

@@ -1,0 +1,9 @@
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
+WORKDIR /usr/src/app
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+RUN playwright install
+RUN playwright install-deps
+COPY . . 
+CMD ["scrapy", "crawl", "scraperpy-css"]
