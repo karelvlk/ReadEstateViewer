@@ -1,3 +1,5 @@
+# The `ScraperpySpider` class is a Scrapy spider that scrapes data from a website and saves it to a
+# PostgreSQL database.
 import logging
 import scrapy
 from scrapy.exceptions import CloseSpider
@@ -12,6 +14,8 @@ logging.basicConfig(
 
 class ScraperpySpider(scrapy.Spider):
     name = "scraperpy-css"
+    RETRY_LIMIT = 3  # Define a reasonable retry limit
+
     scraped_count = 0
     custom_settings = {
         "DOWNLOAD_DELAY": 1,
@@ -46,9 +50,24 @@ class ScraperpySpider(scrapy.Spider):
 
     def parse(self, response):
         if response.status != 200:
-            logging.error(
-                f"Failed to load page: {response.url}, Status: {response.status}"
-            )
+            retries = response.meta.get("retries", 0)
+            if retries < self.RETRY_LIMIT:
+                logging.warning(f"Retrying {response.url}, attempt {retries + 1}")
+                yield scrapy.Request(
+                    response.url,
+                    meta={
+                        "retries": retries + 1,
+                        "playwright": True,
+                        "playwright_page_methods": {
+                            "wait_for_timeout": PLAYWRIGHT_TIMEOUT
+                        },
+                    },
+                    dont_filter=True,  # Important to allow retry of the same URL
+                )
+            else:
+                logging.error(
+                    f"Failed to load page after {self.RETRY_LIMIT} retries: {response.url}, Status: {response.status}"
+                )
             return
 
         for property_div in response.css(".property"):
@@ -64,8 +83,10 @@ class ScraperpySpider(scrapy.Spider):
                 logging.info(
                     f"Successfully scraped {self.scraped_count}/{DESIRED_SCRAPED_COUNT}"
                 )
-                yield {"title": image_title, "img_url": image_url}
                 if self.scraped_count >= DESIRED_SCRAPED_COUNT:
                     raise CloseSpider("Reached desired item count")
+                else:
+                    yield {"title": image_title, "img_url": image_url}
+
             # else:
             # logging.debug("No image URL or title found in this .property div.")
