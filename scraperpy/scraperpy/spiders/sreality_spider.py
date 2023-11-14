@@ -1,14 +1,20 @@
-import scrapy
 import logging
+import scrapy
+from scrapy.exceptions import CloseSpider
 
-PAGE_SIZE = 20
 DESIRED_SCRAPED_COUNT = 500
 PLAYWRIGHT_TIMEOUT = 60000  # 1 min
 
 
 class ScraperpySpider(scrapy.Spider):
     name = "scraperpy-css"
+    scraped_count = 1
     custom_settings = {
+        "DOWNLOAD_DELAY": 1,
+        "CONCURRENT_REQUESTS": 1,
+        "AUTOTHROTTLE_ENABLED": True,
+        "AUTOTHROTTLE_START_DELAY": 1,
+        "AUTOTHROTTLE_MAX_DELAY": 60,
         "ITEM_PIPELINES": {
             "scraperpy.pipelines.PostgresPipeline": 300,
         },
@@ -22,7 +28,9 @@ class ScraperpySpider(scrapy.Spider):
     }
 
     def start_requests(self):
-        for page in range(1, (DESIRED_SCRAPED_COUNT // PAGE_SIZE) + 1):
+        page = 0
+        while True:
+            page += 1
             yield scrapy.Request(
                 f"https://www.sreality.cz/hledani/prodej/byty?strana={page}",
                 # meta={"playwright": True},
@@ -44,10 +52,16 @@ class ScraperpySpider(scrapy.Spider):
             image_title = property_div.css("h2 a span::text").get()
 
             if image_url and image_title:
-                absolute_url = response.urljoin(image_url)
-                logging.debug(
-                    f"Scraped: Image URL: {absolute_url}, Title: {image_title.strip()}"
+                # absolute_url = response.urljoin(image_url)
+                # logging.debug(
+                #     f"Scraped: Image URL: {absolute_url}, Title: {image_title.strip()}"
+                # )
+                self.scraped_count += 1
+                logging.info(
+                    f"Successfully scraped {self.scraped_count}/{DESIRED_SCRAPED_COUNT}"
                 )
                 yield {"title": image_title, "img_url": image_url}
-            else:
-                logging.debug("No image URL or title found in this .property div.")
+                if self.scraped_count >= DESIRED_SCRAPED_COUNT:
+                    raise CloseSpider("Reached desired item count")
+            # else:
+            # logging.debug("No image URL or title found in this .property div.")
